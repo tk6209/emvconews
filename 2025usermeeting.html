@@ -6,6 +6,8 @@
     <title id="pageTitle">Infográfico: Insights do EMVCo User Meeting 2025</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chart.js Datalabels Plugin for percentages on donuts -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -167,12 +169,14 @@
             flex-direction: column; /* Stack elements vertically on small screens */
             gap: 1rem; /* Space between elements */
             align-items: center; /* Center items horizontally */
+            width: 100%; /* Ensure it takes full width of its parent */
         }
 
         @media (min-width: 768px) {
             .search-like-container {
                 flex-direction: row; /* Align elements horizontally on larger screens */
                 flex-wrap: nowrap; /* Prevent wrapping */
+                justify-content: center; /* Center items within the row */
             }
         }
 
@@ -198,6 +202,7 @@
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle shadow */
             transition: all 0.2s ease-in-out;
             background-color: #ffffff; /* Ensure white background */
+            flex-grow: 1; /* Allow selects to grow */
         }
         .search-input:focus {
             outline: none;
@@ -242,6 +247,38 @@
             .chart-container {
                 height: 400px;
                 max-height: 450px;
+            }
+        }
+
+        /* Styles for Flowchart */
+        .flowchart-item {
+            background-color: #e2f0ff; /* Light blue background */
+            border: 1px solid #007bff; /* Blue border */
+            border-radius: 8px;
+            padding: 1rem 1.5rem;
+            text-align: center;
+            font-weight: 600;
+            color: #007bff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .flowchart-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .flowchart-arrow {
+            font-size: 1.5rem;
+            color: #777;
+            margin: 0 0.5rem;
+            align-self: center; /* Align with the center of the items */
+        }
+
+        @media (max-width: 767px) {
+            .flowchart-arrow {
+                transform: rotate(90deg); /* Rotate arrows for vertical flow on small screens */
+                margin: 0.5rem 0;
             }
         }
     </style>
@@ -341,7 +378,7 @@
 
         <section id="gemini-insights" class="mb-16">
             <h2 id="geminiInsightsTitle" class="section-title">Gerador de Insights Personalizados</h2>
-            <div class="card"> <!-- Removed max-w-2xl mx-auto here -->
+            <div class="card">
                 <p id="geminiInsightsSubtitle" class="mb-6 text-center">Selecione uma região e um pilar de inovação para gerar um insight personalizado sobre oportunidades ou desafios.</p>
                 <div class="search-like-container">
                     <div class="search-input-group">
@@ -354,7 +391,7 @@
                             <select id="pillar-select" class="search-input"></select>
                         </div>
                     </div>
-                    <button id="generate-insight-btn" class="w-full md:w-auto bg-[#007bff] hover:bg-[#0056b3] text-white font-bold py-2 px-4 rounded-md transition duration-300 flex items-center justify-center">
+                    <button id="generate-insight-btn" class="w-full md:w-auto bg-[#007bff] hover:bg-[#0056b3] text-white font-bold py-2 px-4 rounded-full transition duration-300 flex items-center justify-center flex-grow">
                         <span id="generateInsightBtnText">Gerar Insight</span>
                         <span id="loading-spinner" class="loader"></span>
                     </button>
@@ -392,11 +429,11 @@
         <section id="resources" class="mb-16">
             <h2 id="resourcesTitle" class="section-title">Recursos Adicionais</h2>
             <div class="card">
-                <ul class="list-disc list-inside text-gray-700 space-y-2">
-                    <li><a id="emvcoArticleLink" href="https://www.emvco.com/knowledge-hub/whats-next-in-payments-highlights-from-the-2025-emv-user-meeting/" target="_blank">EMVCo: What's Next in Payments - Highlights from the 2025 EMV User Meeting</a></li>
-                    <li><a id="fidoPaperLink" href="https://fidoalliance.org/wp-content/uploads/2022/09/FIDO-White-Paper-_-FIDO-Authentication-in-Digital-Payment.pdf" target="_blank">FIDO Alliance White Paper: FIDO Authentication in Digital Payment Security</a></li>
-                    <li><a id="jointPaperLink" href="https://www.emvco.com/knowledge-hub/fido-authentication-and-emv-3-d-secure-reducing-fraud-and-friction-for-online-payments/" target="_blank">EMVCo & FIDO Alliance: FIDO Authentication and EMV 3-D Secure: Reducing Fraud and Friction for Online Payments</a></li>
-                </ul>
+                <div class="flex flex-col text-gray-700 space-y-2">
+                    <a id="emvcoArticleLink" href="https://www.emvco.com/knowledge-hub/whats-next-in-payments-highlights-from-the-2025-emv-user-meeting/" target="_blank">EMVCo: What's Next in Payments - Highlights from the 2025 EMV User Meeting</a>
+                    <a id="fidoPaperLink" href="https://fidoalliance.org/wp-content/uploads/2022/09/FIDO-White-Paper-_-FIDO-Authentication-in-Digital-Payment.pdf" target="_blank">FIDO Alliance White Paper: FIDO Authentication in Digital Payment Security</a>
+                    <a id="jointPaperLink" href="https://www.emvco.com/knowledge-hub/fido-authentication-and-emv-3-d-secure-reducing-fraud-and-friction-for-online-payments/" target="_blank">EMVCo & FIDO Alliance: FIDO Authentication and EMV 3-D Secure: Reducing Fraud and Friction for Online Payments</a>
+                </div>
             </div>
         </section>
 
@@ -691,7 +728,7 @@
                 latamTitle: "LATAM (excepto Brasil)",
                 latamText: "La transición digital está liderada por el crecimiento del comercio electrónico, que impulsa la expansión acelerada de EMV 3DS. En Brasil, Pix se destaca como la principal innovación local, influyendo en todo el ecosistema de pagos.",
                 geminiInsightsTitle: "Generador de Insights Personalizados",
-                geminiInsightsSubtitle: "Seleccione una región y un pilar de innovación para generar un insight personalizado sobre oportunidades o desafíos.",
+                geminiInsightsSubtitle: "Seleccione una región y un pilar de inovação para gerar um insight personalizado sobre oportunidades ou desafios.",
                 regionSelectLabel: "Seleccione la Región:",
                 pillarSelectLabel: "Seleccione el Pilar:",
                 generateInsightBtnText: "Generar Insight",
@@ -703,10 +740,10 @@
                 convergenceText2: "Un enfoque clave es la optimización del uso de FIDO Passkeys durante la autenticación de pagos, especialmente con EMV 3-D Secure. Esto permite una autenticación más sólida, reduciendo la dependencia de las contraseñas y combatiendo el phishing y el fraude de apropiación de cuentas. La capacidad de utilizar datos de FIDO en mensajes 3DS puede aumentar las tasas de aprobación y agilizar el proceso de pago en línea.",
                 convergenceText3: "Además, la Alianza FIDO desempeña un papel fundamental en el apoyo a las iniciativas de Carteras de Identidad Digital, como la EUDI Wallet, garantizando que la identidad digital pueda utilizarse de forma segura e interoperable para fines de pago y otros.",
                 conclusionTitle: "El Camino a Seguir",
-                conclusionText: "El futuro de los pagos es una convergencia de autenticación fuerte, nuevas modalidades e identidades digitales. La colaboración global y la adaptación a las necesidades regionales son esenciales para construir un ecossistema interoperable y seguro.",
+                conclusionText: "El futuro de los pagos es una convergência de autenticação forte, novas modalidades e identidades digitais. La colaboración global y la adaptación a las necesidades regionales son esenciales para construir um ecossistema interoperável e seguro.",
                 flowchartItem1: "Autenticación Fuerte",
                 flowchartItem2: "Nuevas Modalidades",
-                flowchartItem3: "Identidad Digital",
+                flowchartItem3: "Identidade Digital",
                 flowchartItem4: "Seguridad e Interoperabilidad",
                 resourcesTitle: "Recursos Adicionales",
                 emvcoArticleLink: "EMVCo: What's Next in Payments - Highlights from the 2025 EMV User Meeting",
@@ -752,7 +789,7 @@
                         name: "Europa / CEMEA",
                         mapImage: "https://placehold.co/200x150/0056b3/FFFFFF?text=CEMEA",
                         topics: {
-                            evop: { description: "Iniciativas incipientes; enfoque en infraestructuras básicas de aceptación y pilotos en curso. La infraestructura de vehículos eléctricos sigue siendo limitada." },
+                            evop: { description: "Iniciativas incipientes; enfoque en infraestructuras básicas de aceitação e pilotos em curso. La infraestructura de vehículos eléctricos sigue siendo limitada." },
                             passkeys: { description: "Baja penetración general, pero con un interés creciente y un uso concentrado en los bancos digitales emergentes. Se están realizando importantes trabajos para la integración con EMV 3DS y EUDI Wallet, con la Alianza FIDO posicionando su protocolo para autenticaciones de billetera de identidad digital de la UE." },
                             emv3ds: { description: "Crecimiento moderado, impulsado por los requisitos normativos en los mercados del Golfo y de Europa del Este. El fuerte avance en el uso de 3-D Secure está impulsado por la SCA bajo PSD2. La colaboración con FIDO tiene como objetivo proporcionar niveles más altos de segurança e experiências de usuário aprimoradas." },
                             eudiWallet: { description: "La EUDI Wallet es una solución clave para cumplir los requisitos de PSD2/PSD3 e SCA na Europa. Fuera de la UE, aún no hay un equivalente consolidado. Os avanços dependem da integração com o EUDI Wallet, com a Aliança FIDO proporcionando orientação para o uso de FIDO na EUDI Wallet." }
@@ -763,9 +800,9 @@
                         mapImage: "https://placehold.co/200x150/004080/FFFFFF?text=LATAM",
                         topics: {
                             evop: { description: "La infraestrutura de recarga de EV ainda é limitada, e o EVOP é pouco debatido." },
-                            passkeys: { description: "Adoção inicial a través de bancos digitais e billeteras (por exemplo, Nubank en México, Ualá en Argentina). La autenticación FIDO oferece uma forma de implementar autenticação mais sólida e sencilla, melhorando a experiência do usuário." },
+                            passkeys: { description: "Adoção inicial a través de bancos digitais e billeteras (por exemplo, Nubank en México, Ualá en Argentina). La autenticação FIDO oferece uma forma de implementar autenticação mais sólida e sencilla, melhorando a experiência do usuário." },
                             emv3ds: { description: "Em expansão acelerada via e-commerce e pressão das bandeiras. O e-commerce impulsiona o uso do 3DS. La integração com la autenticação FIDO pode reduzir fraudes y atritos em pagamentos online." },
-                            eudiWallet: { description: "Sin una billetera reguladora central, pero con algunos pilotos de identidad digital en gobiernos locales. La adopción de FIDO para identidad digital puede impulsionar esses pilotos." }
+                            eudiWallet: { description: "Sin una billetera reguladora central, pero con algunos pilotos de identidad digital en gobiernos locales. La adopção de FIDO para identidad digital puede impulsionar esses pilotos." }
                         }
                     },
                     "brasil": {
@@ -775,226 +812,6 @@
                             evop: { description: "En fase exploratoria, con un fuerte foco en Pix y pagamentos instantâneos como prioridade." },
                             passkeys: { description: "En pilotos con grandes bancos y fintechs (Itaú, Bradesco, Nubank) y billeteras digitais. La autenticación FIDO se considera una solución para fortalecer la seguridad y la conveniência, combatiendo los ataques de phishing." },
                             emv3ds: { description: "Expansão rápida tras el impulso do Banco Central y las marcas, con integración de biometria para reducir el fraude. La colaboración entre EMVCo y la Aliança FIDO es relevante para otimizar el uso de datos de FIDO en transacciones 3DS, mejorando la seguridad y las tasas de aprobación." },
-                            eudiWallet: { description: "Existe uma discusión inicial sobre una billetera de identidad digital nacional, pero aún no hay un equivalente a la EUDI. Pix domina como una innovación central y lidera la adopção local, but FIDO Alliance support for digital identities can accelerate the implementation of a national wallet." }
-                        }
-                    }
-                }
-            },
-            es: {
-                pageTitle: "Infografía: Insights de la Reunión de Usuarios EMVCo 2025",
-                headerTitle: "El Futuro de los Pagos",
-                headerSubtitle: "Insights de la Reunión de Usuarios EMVCo 2025 sobre las tendencias globales que están dando forma a la industria.",
-                pillarsTitle: "Los Cuatro Pilares de la Innovación",
-                evopDesc: "Pagos abiertos e interoperables para vehículos eléctricos, simplificando la experiencia de recarga.",
-                passkeysDesc: "Autenticación sin contraseña que promete mayor seguridad y conveniencia, reemplazando los métodos tradicionales.",
-                emv3dsDesc: "La evolución de la seguridad para pagos en línea, combatiendo el fraude con una autenticación robusta.",
-                digitalWalletsDesc: "Enfoque en identidades digitales unificadas, como la EUDI Wallet, para centralizar credenciales y pagos.",
-                snapshotTitle: "Instantánea de la Adopción Global",
-                snapshotSubtitle: "Este gráfico de radar compara el nivel de madurez de cada pilar de innovación en las principales regiones. Una puntuación más alta indica una etapa más avanzada de adopción, desde la exploración inicial hasta la implementación a gran escala.",
-                deepdiveTitle: "Destacados e Impulsores Regionales",
-                northAmericaTitle: "América del Norte",
-                northAmericaText: "La región lidera como pionera, especialmente en la implementación de pilotos de EVOP y el despliegue activo de Passkeys por parte de grandes empresas tecnológicas y bancos, marcando el ritmo de la innovación en pagos vehiculares.",
-                apacTitle: "APAC",
-                apacText: "Con su liderazgo consolidado en pagos móviles y NFC, APAC es un terreno fértil para la innovación. La región muestra una alta adopción de EMV 3DS y un rápido avance de Passkeys, impulsado por las grandes empresas tecnológicas locales.",
-                cemeaTitle: "Europa / CEMEA",
-                cemeaText: "El avance en la región está fuertemente ligado a las directrices regulatorias y a la implementación de la EUDI Wallet, que servirá como una solución clave para unificar la identidad y los pagos bajo el paraguas de PSD2/PSD3.",
-                latamTitle: "LATAM (excepto Brasil)",
-                latamText: "La transición digital está liderada por el crecimiento del comercio electrónico, que impulsa la expansión acelerada de EMV 3DS. En Brasil, Pix se destaca como la principal innovación local, influyendo en todo el ecosistema de pagos.",
-                geminiInsightsTitle: "Generador de Insights Personalizados",
-                geminiInsightsSubtitle: "Seleccione una región y un pilar de innovación para generar un insight personalizado sobre oportunidades o desafíos.",
-                regionSelectLabel: "Seleccione la Región:",
-                pillarSelectLabel: "Seleccione el Pilar:",
-                generateInsightBtnText: "Generar Insight",
-                insightOutputLabel: "Insight Generado:",
-                mapRegionTitle: "Región Seleccionada:",
-                errorMessageText: "Ocurrió un error al generar el insight. Por favor, inténtelo de nuevo.",
-                convergenceTitle: "Convergencia y Colaboración",
-                convergenceText1: "La Reunión de Usuarios EMVCo 2025 destacó la creciente convergencia entre las tecnologías de pago y autenticación. La colaboración continua entre EMVCo, FIDO Alliance y W3C es crucial para el futuro de los pagos en línea, con el objetivo de mejorar la seguridad y la experiencia del usuario.",
-                convergenceText2: "Un enfoque clave es la optimización del uso de FIDO Passkeys durante la autenticación de pagos, especialmente con EMV 3-D Secure. Esto permite una autenticación más sólida, reduciendo la dependencia de las contraseñas y combatiendo el phishing y el fraude de apropiación de cuentas. La capacidad de utilizar datos de FIDO en mensajes 3DS puede aumentar las tasas de aprobación y agilizar el proceso de pago en línea.",
-                convergenceText3: "Además, la Alianza FIDO desempeña un papel fundamental en el apoyo a las iniciativas de Carteras de Identidad Digital, como la EUDI Wallet, garantizando que la identidad digital pueda utilizarse de forma segura e interoperable para fines de pago y otros.",
-                conclusionTitle: "El Camino a Seguir",
-                conclusionText: "El futuro de los pagos es una convergencia de autenticación fuerte, nuevas modalidades e identidades digitales. La colaboración global y la adaptación a las necesidades regionales son esenciales para construir un ecossistema interoperable y seguro.",
-                flowchartItem1: "Autenticación Fuerte",
-                flowchartItem2: "Nuevas Modalidades",
-                flowchartItem3: "Identidad Digital",
-                flowchartItem4: "Seguridad e Interoperabilidad",
-                resourcesTitle: "Recursos Adicionales",
-                emvcoArticleLink: "EMVCo: What's Next in Payments - Highlights from the 2025 EMV User Meeting",
-                fidoPaperLink: "FIDO Alliance White Paper: FIDO Authentication in Digital Payment Security",
-                jointPaperLink: "EMVCo & FIDO Alliance: FIDO Authentication and EMV 3-D Secure: Reducing Fraud and Friction for Online Payments",
-                footerText: "Infografía creada con base en los insights de la Reunión de Usuarios EMVCo 2025. Copyright authPros 2025.",
-                regionOptions: {
-                    "america-norte": "América del Norte",
-                    "apac": "APAC",
-                    "cemea": "Europa / CEMEA",
-                    "latam": "LATAM (excepto Brasil)",
-                    "brasil": "Brasil"
-                },
-                pillarOptions: {
-                    "evop": "EVOP",
-                    "passkeys": "Passkeys",
-                    "emv3ds": "EMV 3-D Secure",
-                    "eudiWallet": "Carteras Digitales"
-                },
-                radarLabels: ['EVOP', 'Passkeys', 'EMV 3DS', wrapLabel('Carteras Digitales')],
-                regionalDataDetailed: {
-                    "america-norte": {
-                        name: "América del Norte",
-                        mapImage: "https://placehold.co/200x150/007bff/FFFFFF?text=NA",
-                        topics: {
-                            evop: { description: "Pilotos activos junto con la expansión de la infraestructura de vehículos eléctricos. EVOP se considera una solución ideal para la interoperabilidad. Fuerte interés de las industrias automotriz, financiera y política para acelerar esta adopción. Pionero en pilotos." },
-                            passkeys: { description: "Ya están siendo implementados por grandes empresas tecnológicas (Apple, Google) y grandes bancos. Están ganando terreno entre emisores y procesadores. La optimización del uso de FIDO Passkeys durante la autenticación de pagos es un enfoque clave, lo que permite una autenticación más sólida y reduce la dependencia de las contraseñas." },
-                            emv3ds: { description: "Uso creciente en el comercio electrónico, centrándose en la lucha contra el fraude en línea y la reducción de contracargos. El mercado de autenticación 3DS en EE. UU. y Canadá representa aproximadamente el 40% del mercado global. La integración con la autenticación FIDO tiene como objetivo aumentar las tasas de aprobación y agilizar el proceso de pago en línea." },
-                            eudiWallet: { description: "No existe una EUDI Wallet, pero hay un fuerte movimiento en torno a las identificaciones digitales estatales y las credenciales del gobierno canadiense. La Alianza FIDO desempeña un papel fundamental en el apoyo a las iniciativas de identidad digital." }
-                        }
-                    },
-                    "apac": {
-                        name: "APAC",
-                        mapImage: "https://placehold.co/200x150/84D4F4/FFFFFF?text=APAC",
-                        topics: {
-                            evop: { description: "En estudio y evaluación, con un gran potencial debido al liderazgo en NFC y pagos móviles, y al rápido crecimiento de vehículos eléctricos e infraestructura de carga. Hay iniciativas en fase de planificación, especialmente en países como China, Japón y Corea del Sur." },
-                            passkeys: { description: "Adopción avanzando a través de BigTechs como Alibaba y Samsung. La autenticación FIDO se considera una forma de implementar una autenticación más sólida y sencilla, mejorando la experiencia del usuario y previniendo los ataques de phishing." },
-                            emv3ds: { description: "Alta adopción en mercados como India y Australia, en respuesta al aumento del fraude en línea. La colaboración con la Alianza FIDO busca optimizar el uso de datos de FIDO en mensajes 3DS para mejorar la seguridad y la aprobación de transacciones." },
-                            eudiWallet: { description: "Sin un equivalente formal a la EUDI Wallet, pero los gobiernos están probando identificaciones digitales nacionales en lugares como China y Singapur. El liderazgo en NFC y pagos móviles crea un terreno fértil para EVOP y passkeys, con el apoyo de la Alianza FIDO para identidades digitales." }
-                        }
-                    },
-                    "cemea": {
-                        name: "Europa / CEMEA",
-                        mapImage: "https://placehold.co/200x150/0056b3/FFFFFF?text=CEMEA",
-                        topics: {
-                            evop: { description: "Iniciativas incipientes; enfoque en infraestructuras básicas de aceptación y pilotos en curso. La infraestructura de vehículos eléctricos sigue siendo limitada." },
-                            passkeys: { description: "Baja penetración general, pero con un interés creciente y un uso concentrado en los bancos digitales emergentes. Se están realizando importantes trabajos para la integración con EMV 3DS y EUDI Wallet, con la Alianza FIDO posicionando su protocolo para autenticaciones de billetera de identidad digital de la UE." },
-                            emv3ds: { description: "Crecimiento moderado, impulsado por los requisitos normativos en los mercados del Golfo y de Europa del Este. El fuerte avance en el uso de 3-D Secure está impulsado por la SCA bajo PSD2. La colaboración con FIDO tiene como objetivo proporcionar niveles más altos de segurança e experiências de usuário aprimoradas." },
-                            eudiWallet: { description: "La EUDI Wallet es una solución clave para cumplir los requisitos de PSD2/PSD3 e SCA na Europa. Fuera de la UE, aún no hay un equivalente consolidado. Os avanços dependem da integração com o EUDI Wallet, com a Aliança FIDO proporcionando orientação para o uso de FIDO na EUDI Wallet." }
-                        }
-                    },
-                    "latam": {
-                        name: "LATAM (excepto Brasil)",
-                        mapImage: "https://placehold.co/200x150/004080/FFFFFF?text=LATAM",
-                        topics: {
-                            evop: { description: "La infraestrutura de recarga de EV ainda é limitada, e o EVOP é pouco debatido." },
-                            passkeys: { description: "Adoção inicial a través de bancos digitais e billeteras (por exemplo, Nubank en México, Ualá en Argentina). La autenticación FIDO oferece uma forma de implementar autenticação mais sólida e sencilla, melhorando a experiência do usuário." },
-                            emv3ds: { description: "Em expansão acelerada via e-commerce e pressão das bandeiras. O e-commerce impulsiona o uso do 3DS. La integração com la autenticação FIDO pode reduzir fraudes y atritos em pagamentos online." },
-                            eudiWallet: { description: "Sin una billetera reguladora central, pero con algunos pilotos de identidad digital en gobiernos locales. La adopción de FIDO para identidad digital puede impulsionar esses pilotos." }
-                        }
-                    },
-                    "brasil": {
-                        name: "Brasil",
-                        mapImage: "https://placehold.co/200x150/FF7F50/FFFFFF?text=BR",
-                        topics: {
-                            evop: { description: "En fase exploratoria, con un fuerte foco en Pix y pagamentos instantâneos como prioridade." },
-                            passkeys: { description: "En pilotos con grandes bancos y fintechs (Itaú, Bradesco, Nubank) y billeteras digitais. La autenticación FIDO se considera una solución para fortalecer la seguridad y la conveniência, combatiendo los ataques de phishing." },
-                            emv3ds: { description: "Expansão rápida tras el impulso do Banco Central y las marcas, con integración de biometria para reducir el fraude. La colaboración entre EMVCo y la Aliança FIDO es relevante para otimizar el uso de datos de FIDO en transacciones 3DS, mejorando la seguridad y las tasas de aprobación." },
-                            eudiWallet: { description: "Existe uma discusión inicial sobre una billetera de identidad digital nacional, pero aún no hay un equivalente a la EUDI. Pix domina como una innovación central y lidera la adopção local, but FIDO Alliance support for digital identities can accelerate the implementation of a national wallet." }
-                        }
-                    }
-                }
-            },
-            es: {
-                pageTitle: "Infografía: Insights de la Reunión de Usuarios EMVCo 2025",
-                headerTitle: "El Futuro de los Pagos",
-                headerSubtitle: "Insights de la Reunión de Usuarios EMVCo 2025 sobre las tendencias globales que están dando forma a la industria.",
-                pillarsTitle: "Los Cuatro Pilares de la Innovación",
-                evopDesc: "Pagos abiertos e interoperables para vehículos eléctricos, simplificando la experiencia de recarga.",
-                passkeysDesc: "Autenticación sin contraseña que promete mayor seguridad y conveniencia, reemplazando los métodos tradicionales.",
-                emv3dsDesc: "La evolución de la seguridad para pagos en línea, combatiendo el fraude con una autenticación robusta.",
-                digitalWalletsDesc: "Enfoque en identidades digitales unificadas, como la EUDI Wallet, para centralizar credenciales y pagos.",
-                snapshotTitle: "Instantánea de la Adopción Global",
-                snapshotSubtitle: "Este gráfico de radar compara el nivel de madurez de cada pilar de innovación en las principales regiones. Una puntuación más alta indica una etapa más avanzada de adopción, desde la exploración inicial hasta la implementación a gran escala.",
-                deepdiveTitle: "Destacados e Impulsores Regionales",
-                northAmericaTitle: "América del Norte",
-                northAmericaText: "La región lidera como pionera, especialmente en la implementación de pilotos de EVOP y el despliegue activo de Passkeys por parte de grandes empresas tecnológicas y bancos, marcando el ritmo de la innovación en pagos vehiculares.",
-                apacTitle: "APAC",
-                apacText: "Con su liderazgo consolidado en pagos móviles y NFC, APAC es un terreno fértil para la innovación. La región muestra una alta adopción de EMV 3DS y un rápido avance de Passkeys, impulsado por las grandes empresas tecnológicas locales.",
-                cemeaTitle: "Europa / CEMEA",
-                cemeaText: "El avance en la región está fuertemente ligado a las directrices regulatorias y a la implementación de la EUDI Wallet, que servirá como una solución clave para unificar la identidad y los pagos bajo el paraguas de PSD2/PSD3.",
-                latamTitle: "LATAM (excepto Brasil)",
-                latamText: "La transición digital está liderada por el crecimiento del comercio electrónico, que impulsa la expansión acelerada de EMV 3DS. En Brasil, Pix se destaca como la principal innovación local, influyendo en todo el ecosistema de pagos.",
-                geminiInsightsTitle: "Generador de Insights Personalizados",
-                geminiInsightsSubtitle: "Seleccione una región y un pilar de innovación para generar un insight personalizado sobre oportunidades o desafíos.",
-                regionSelectLabel: "Seleccione la Región:",
-                pillarSelectLabel: "Seleccione el Pilar:",
-                generateInsightBtnText: "Generar Insight",
-                insightOutputLabel: "Insight Generado:",
-                mapRegionTitle: "Región Seleccionada:",
-                errorMessageText: "Ocurrió un error al generar el insight. Por favor, inténtelo de nuevo.",
-                convergenceTitle: "Convergencia y Colaboración",
-                convergenceText1: "La Reunión de Usuarios EMVCo 2025 destacó la creciente convergencia entre las tecnologías de pago y autenticación. La colaboración continua entre EMVCo, FIDO Alliance y W3C es crucial para el futuro de los pagos en línea, con el objetivo de mejorar la seguridad y la experiencia del usuario.",
-                convergenceText2: "Un enfoque clave es la optimización del uso de FIDO Passkeys durante la autenticación de pagos, especialmente con EMV 3-D Secure. Esto permite una autenticación más sólida, reduciendo la dependencia de las contraseñas y combatiendo el phishing y el fraude de apropiación de cuentas. La capacidad de utilizar datos de FIDO en mensajes 3DS puede aumentar las tasas de aprobación y agilizar el proceso de pago en línea.",
-                convergenceText3: "Además, la Alianza FIDO desempeña un papel fundamental en el apoyo a las iniciativas de Carteras de Identidad Digital, como la EUDI Wallet, garantizando que la identidad digital pueda utilizarse de forma segura e interoperable para fines de pago y otros.",
-                conclusionTitle: "El Camino a Seguir",
-                conclusionText: "El futuro de los pagos es una convergencia de autenticación fuerte, nuevas modalidades e identidades digitales. La colaboración global y la adaptación a las necesidades regionales son esenciales para construir un ecossistema interoperable y seguro.",
-                flowchartItem1: "Autenticación Fuerte",
-                flowchartItem2: "Nuevas Modalidades",
-                flowchartItem3: "Identidad Digital",
-                flowchartItem4: "Seguridad e Interoperabilidad",
-                resourcesTitle: "Recursos Adicionales",
-                emvcoArticleLink: "EMVCo: What's Next in Payments - Highlights from the 2025 EMV User Meeting",
-                fidoPaperLink: "FIDO Alliance White Paper: FIDO Authentication in Digital Payment Security",
-                jointPaperLink: "EMVCo & FIDO Alliance: FIDO Authentication and EMV 3-D Secure: Reducing Fraud and Friction for Online Payments",
-                footerText: "Infografía creada con base en los insights de la Reunión de Usuarios EMVCo 2025. Copyright authPros 2025.",
-                regionOptions: {
-                    "america-norte": "América del Norte",
-                    "apac": "APAC",
-                    "cemea": "Europa / CEMEA",
-                    "latam": "LATAM (excepto Brasil)",
-                    "brasil": "Brasil"
-                },
-                pillarOptions: {
-                    "evop": "EVOP",
-                    "passkeys": "Passkeys",
-                    "emv3ds": "EMV 3-D Secure",
-                    "eudiWallet": "Carteras Digitales"
-                },
-                radarLabels: ['EVOP', 'Passkeys', 'EMV 3DS', wrapLabel('Carteras Digitales')],
-                regionalDataDetailed: {
-                    "america-norte": {
-                        name: "América del Norte",
-                        mapImage: "https://placehold.co/200x150/007bff/FFFFFF?text=NA",
-                        topics: {
-                            evop: { description: "Pilotos activos junto con la expansión de la infraestructura de vehículos eléctricos. EVOP se considera una solución ideal para la interoperabilidad. Fuerte interés de las industrias automotriz, financiera y política para acelerar esta adopción. Pionero en pilotos." },
-                            passkeys: { description: "Ya están siendo implementados por grandes empresas tecnológicas (Apple, Google) y grandes bancos. Están ganando terreno entre emisores y procesadores. La optimización del uso de FIDO Passkeys durante la autenticación de pagos es un enfoque clave, lo que permite una autenticación más sólida y reduce la dependencia de las contraseñas." },
-                            emv3ds: { description: "Uso creciente en el comercio electrónico, centrándose en la lucha contra el fraude en línea y la reducción de contracargos. El mercado de autenticación 3DS en EE. UU. y Canadá representa aproximadamente el 40% del mercado global. La integración con la autenticación FIDO tiene como objetivo aumentar las tasas de aprobación y agilizar el proceso de pago en línea." },
-                            eudiWallet: { description: "No existe una EUDI Wallet, pero hay un fuerte movimiento en torno a las identificaciones digitales estatales y las credenciales del gobierno canadiense. La Alianza FIDO desempeña un papel fundamental en el apoyo a las iniciativas de identidad digital." }
-                        }
-                    },
-                    "apac": {
-                        name: "APAC",
-                        mapImage: "https://placehold.co/200x150/84D4F4/FFFFFF?text=APAC",
-                        topics: {
-                            evop: { description: "En estudio y evaluación, con un gran potencial debido al liderazgo en NFC y pagos móviles, y al rápido crecimiento de vehículos eléctricos e infraestructura de carga. Hay iniciativas en fase de planificación, especialmente en países como China, Japón y Corea del Sur." },
-                            passkeys: { description: "Adopción avanzando a través de BigTechs como Alibaba y Samsung. La autenticación FIDO se considera una forma de implementar una autenticación más sólida y sencilla, mejorando la experiencia del usuario y previniendo los ataques de phishing." },
-                            emv3ds: { description: "Alta adopción en mercados como India y Australia, en respuesta al aumento del fraude en línea. La colaboración con la Alianza FIDO busca optimizar el uso de datos de FIDO en mensajes 3DS para mejorar la seguridad y la aprobación de transacciones." },
-                            eudiWallet: { description: "Sin un equivalente formal a la EUDI Wallet, pero los gobiernos están probando identificaciones digitales nacionales en lugares como China y Singapur. El liderazgo en NFC y pagos móviles crea un terreno fértil para EVOP y passkeys, con el apoyo de la Alianza FIDO para identidades digitales." }
-                        }
-                    },
-                    "cemea": {
-                        name: "Europa / CEMEA",
-                        mapImage: "https://placehold.co/200x150/0056b3/FFFFFF?text=CEMEA",
-                        topics: {
-                            evop: { description: "Iniciativas incipientes; enfoque en infraestructuras básicas de aceptación y pilotos en curso. La infraestructura de vehículos eléctricos sigue siendo limitada." },
-                            passkeys: { description: "Baja penetración general, pero con un interés creciente y un uso concentrado en los bancos digitales emergentes. Se están realizando importantes trabajos para la integración con EMV 3DS y EUDI Wallet, con la Alianza FIDO posicionando su protocolo para autenticaciones de billetera de identidad digital de la UE." },
-                            emv3ds: { description: "Crecimiento moderado, impulsado por los requisitos normativos en los mercados del Golfo y de Europa del Este. El fuerte avance en el uso de 3-D Secure está impulsado por la SCA bajo PSD2. La colaboración con FIDO tiene como objetivo proporcionar niveles más altos de segurança e experiências de usuário aprimoradas." },
-                            eudiWallet: { description: "La EUDI Wallet es una solución clave para cumplir los requisitos de PSD2/PSD3 e SCA na Europa. Fuera de la UE, aún no hay un equivalente consolidado. Os avanços dependem da integração com o EUDI Wallet, com a Aliança FIDO proporcionando orientação para o uso de FIDO na EUDI Wallet." }
-                        }
-                    },
-                    "latam": {
-                        name: "LATAM (excepto Brasil)",
-                        mapImage: "https://placehold.co/200x150/004080/FFFFFF?text=LATAM",
-                        topics: {
-                            evop: { description: "La infraestrutura de recarga de EV ainda é limitada, e o EVOP é pouco debatido." },
-                            passkeys: { description: "Adoção inicial a través de bancos digitais e billeteras (por exemplo, Nubank en México, Ualá en Argentina). La autenticación FIDO oferece uma forma de implementar autenticação mais sólida e sencilla, melhorando a experiência do usuário." },
-                            emv3ds: { description: "Em expansão acelerada via e-commerce e pressão das bandeiras. O e-commerce impulsiona o uso do 3DS. La integração com la autenticação FIDO pode reduzir fraudes y atritos em pagamentos online." },
-                            eudiWallet: { description: "Sin una billetera reguladora central, pero con algunos pilotos de identidad digital en gobiernos locales. La adopción de FIDO para identidad digital puede impulsionar esses pilotos." }
-                        }
-                    },
-                    "brasil": {
-                        name: "Brasil",
-                        mapImage: "https://placehold.co/200x150/FF7F50/FFFFFF?text=BR",
-                        topics: {
-                            evop: { description: "En fase exploratoria, con un fuerte foco en Pix y pagamentos instantâneos como prioridade." },
-                            passkeys: { description: "En pilotos con grandes bancos y fintechs (Itaú, Bradesco, Nubank) y billeteras digitais. La autenticación FIDO se considera una solución para fortalecer la seguridad y la conveniência, combatiendo los ataques de phishing." },
-                            emv3ds: { description: "Expansão rápida tras el impulso do Banco Central y las marcas, con integración de biometria para reducir el fraude. La colaboración entre EMVCo y la Aliança FIDO es relevante para otimizar el uso de datos de FIDO en transações 3DS, mejorando la seguridad y las tasas de aprobación." },
                             eudiWallet: { description: "Existe uma discusión inicial sobre una billetera de identidad digital nacional, pero aún no hay un equivalente a la EUDI. Pix domina como una innovación central y lidera la adopção local, but FIDO Alliance support for digital identities can accelerate the implementation of a national wallet." }
                         }
                     }
@@ -1204,16 +1021,29 @@
                         }]
                     },
                     options: {
-                        ...tooltipCallback,
                         responsive: true,
                         maintainAspectRatio: false,
                         cutout: '70%',
                         plugins: {
-                            ...tooltipCallback.plugins,
                             legend: { display: false },
-                            tooltip: { enabled: false }
+                            tooltip: { enabled: false },
+                            datalabels: {
+                                color: '#fff', // White color for better contrast
+                                font: {
+                                    size: 18,
+                                    weight: 'bold'
+                                },
+                                formatter: (value, context) => {
+                                    // Only show value for the first segment (the actual data)
+                                    if (context.dataIndex === 0) {
+                                        return value + '%';
+                                    }
+                                    return '';
+                                }
+                            }
                         }
-                    }
+                    },
+                    plugins: [ChartDataLabels] // Register the plugin for this chart
                 });
             };
 
